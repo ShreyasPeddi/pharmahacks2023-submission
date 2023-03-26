@@ -7,6 +7,9 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import StackingClassifier
 from sklearn.metrics import accuracy_score, f1_score, cohen_kappa_score, classification_report
+import warnings
+
+warnings.filterwarnings('always')
 
 #get training and testing data
 data = pd.read_csv('./bioassay/AID373red_train.csv')
@@ -55,5 +58,5 @@ accuracy = accuracy_score(y_test, y_predictions)
 
 print("accuracy: ", accuracy)
 print("f1 score: ", f1)
-print("cohen kappa score: ", cohen_kappa)
-print(classification_report(y_test, y_predictions))
+#print("cohen kappa score: ", cohen_kappa)
+#print(classification_report(y_test, y_predictions))
