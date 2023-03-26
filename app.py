@@ -1,5 +1,6 @@
 #imports
 import pandas as pd
+import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.svm import SVC
@@ -22,38 +23,33 @@ y_test = test_data["Outcome"]
 
 #random forest model
 RF_classifier = RandomForestClassifier(max_depth=6, n_estimators = 178)
-RF_classifier.fit(x_train, y_train)
 
 #xgboost model
 XGB_classifier = XGBClassifier()
-XGB_classifier.fit(x_train , y_train)  
 
 #svm model
 SVM_classifier = SVC(kernel='rbf')
-SVM_classifier.fit(x_train, y_train)
 
 #naive bayes model
 NB_classifier = GaussianNB()
-NB_classifier.fit(x_train, y_train)
 
 #stack all models
-estimators = [RF_classifier, XGB_classifier, SVM_classifier, NB_classifier]
+estimators = [RF_classifier, SVM_classifier, NB_classifier]
 estimators = [
      ('rf', RandomForestClassifier(max_depth=6, n_estimators = 178)),
-     ('xgb', XGBClassifier()),
      ('svm', SVC(kernel='rbf')),
      ('nb', GaussianNB())
 ]
 
 aggregate_model = StackingClassifier(estimators = estimators, 
-                                    final_estimator = RF_classifier)
+                                    final_estimator = XGB_classifier)
 
 print(aggregate_model.fit(x_train, y_train).score(x_test, y_test))
 
 #testing metrics
 y_predictions = aggregate_model.predict(x_test)
 
-f1 = f1_score(y_test, y_predictions, average="micro")
+f1 = f1_score(y_test, y_predictions, average="weighted", zero_division=0)
 cohen_kappa = cohen_kappa_score(y_test, y_predictions)
 
 print(f1)
